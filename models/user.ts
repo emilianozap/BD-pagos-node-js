@@ -1,32 +1,49 @@
 import { Model, Schema, model } from "mongoose";
+import { ROLES } from "../helpers/constants";
+import { updateSourceFile } from "typescript";
 
 export interface IUser {
-  departamento: string;
-  dni: number;
   nombre: string;
-  estado: boolean;
+  email: string;
+  password: string;
+  rol?: string;
+  code?: string;
+  verified:boolean;  
 }
 
 const UserSchema = new Schema<IUser>({
-  departamento: {
-    type: String,
-    required: true,
-  },
-  dni: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
   nombre: {
     type: String,
-    required: true,
+    required: [true, "el nombre es obligatorio"],
   },
-  estado: {
+  email: {
+    type: String,
+    required: [true, "el email es obligatorio"],
+  },
+  password: {
+    type: String,
+    required: [true, "el password es obligatorio"],
+    
+  },
+
+  rol: {
+    type: String,
+    default: ROLES.user,
+  },
+  code: {
+    type: String,
+    
+  },
+  verified:{
     type: Boolean,
-    required: true,
-    default: true,
-  },
+    default: false
+  }
 });
 
-const User: Model<IUser> = model<IUser>("Users", UserSchema);
+UserSchema.methods.toJSON = function(){
+  const{__v, password, _id, code, ...usuario} = this.toObject()
+  return usuario
+}
+
+const User: Model<IUser> = model<IUser>("Usuario", UserSchema);
 export default User;

@@ -1,17 +1,16 @@
 import mongoose from "mongoose";
 
-const conectarBD = async():Promise<void>=>{
+export const conectarBD = async():Promise<void>=>{
     try {
-        await mongoose.connect("mongodb+srv://ez:18155786@emiliano.wjn22ao.mongodb.net/")
-        console.log("conectado a Base de Datos");
+        const dbURL = process.env.DB_URL;
+        if (!dbURL) {
+            throw new Error("la URL no esta correctamente definida en el .env")
+        }
+        await mongoose.connect(dbURL)
+        console.log("Base de Datos online");
         
     } catch (error) {
-        console.log(" error de conexión");
-        
-        
+        throw new Error(" error de conexión BD");
     }
 }
 
-export{
-    conectarBD
-}

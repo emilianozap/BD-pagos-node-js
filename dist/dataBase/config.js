@@ -16,11 +16,15 @@ exports.conectarBD = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const conectarBD = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose_1.default.connect("mongodb+srv://ez:18155786@emiliano.wjn22ao.mongodb.net/");
-        console.log("conectado a Base de Datos");
+        const dbURL = process.env.DB_URL;
+        if (!dbURL) {
+            throw new Error("la URL no esta correctamente definida en el .env");
+        }
+        yield mongoose_1.default.connect(dbURL);
+        console.log("Base de Datos online");
     }
     catch (error) {
-        console.log(" error de conexión");
+        throw new Error(" error de conexión BD");
     }
 });
 exports.conectarBD = conectarBD;
